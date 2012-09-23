@@ -2,6 +2,24 @@
 
 /* Controllers */
 
+/* A cached resource function returns a promise which either resolves to a
+ * pre-fetch resource, or to the resource once it is loaded.
+ *
+ *  Resources are keyed based on field named key_field.
+ */
+function cachedResource($q, resource_function, key_field) {
+    var cache = {};
+    return function(args) {
+        var key = args[key_field];
+        if(!cache[key]) {
+            var deferred = $q.defer();
+            resource_function(args, deferred.resolve);
+            cache[key] = deferred.promise;
+        }
+        return cache[key];
+    }
+}
+
 function flickrCtrl($scope, $resource, $q) {
 
     function flickr_api_resource(args) {
@@ -13,39 +31,21 @@ function flickrCtrl($scope, $resource, $q) {
                          {get:{method:'JSONP'}});
     }
 
-    var res_findByUsername = flickr_api_resource({method:"flickr.people.findByUsername"});
-    var res_getPersonInfo = flickr_api_resource({method:"flickr.people.getInfo"});
+    /*
+    var res_findByUsername = cachedResource($q, flickr_api_resource.({method:"flickr.people.findByUsername"}).get,
+                                            "username");
+    */
     var res_searchPhotos = flickr_api_resource({method:"flickr.photos.search", per_page:10});
-    var res_getSizes = flickr_api_resource({method:"flickr.photos.getSizes"});
+    var res_getPersonInfo = cachedResource($q, flickr_api_resource({method:"flickr.people.getInfo"}).get,
+                                           "user_id");
+
+    var res_getSizes = cachedResource($q, flickr_api_resource({method:"flickr.photos.getSizes"}).get,
+                                      "photo_id");
 
     $scope.search = {tags:"makehackvoid"} // searchPhotos arguments, bound to form fields in the view
     $scope.size = "Medium"; // chosen size to show
 
     $scope.person_info_promises = {} // lookup table from userid to promise person info
-
-    var getPersonInfo = function(userid) {
-        /* Return a promise for personinfo for a particular user id.
-
-         Returns a promises because personinfo is cached.*/
-        var val = $scope.person_info_promises[userid];
-        if(val) {
-            return val;
-        }
-        var deferred = $q.defer();
-        res_getPersonInfo.get({user_id: userid}, deferred.resolve);
-        $scope.person_info_promises[userid] = deferred.promise;
-        return deferred.promise;
-    }
-
-    var getSizes = function(photo, callback) {
-        /* This function doesn't return a promise because we're not caching anything so we can
-           just use the normal resource callback, with the photo for context.
-        */
-        return res_getSizes.get({photo_id:photo.id}, function(data) {
-            if(callback)
-                callback(data, photo);
-        });
-    }
 
     $scope.getSize = function(photo) {
         /* Return the currently selected size for a given photo, as chosen by $scope.Size */
@@ -56,7 +56,6 @@ function flickrCtrl($scope, $resource, $q) {
             return null;
         }
         for(var j = 0; j < sizes.length; j++) {
-            console.log(sizes[j].label);
             if(sizes[j].label == $scope.size)
                 return sizes[j];
         }
@@ -68,15 +67,19 @@ function flickrCtrl($scope, $resource, $q) {
             $scope.photos = data.photos.photo;
             // attach promises to define photo owner's username & size information
             function bind_username_promise(photo) {
-                getPersonInfo(photo.owner).then(function(result) {
+                res_getPersonInfo({user_id:photo.owner}).then(function(result) {
                     photo.username = result.person.username._content;
+                });
+            }
+            function bind_size_promise(photo) {
+                res_getSizes({photo_id:photo.id}).then(function(result) {
+                    photo.sizes = result;
                 });
             }
             for(var i=0; i<$scope.photos.length; i++) {
                 var photo = $scope.photos[i];
                 bind_username_promise(photo);
-                photo.sizes = getSizes(photo);
-                console.log(photo.sizes);
+                bind_size_promise(photo);
             }
         });
     }
