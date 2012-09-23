@@ -48,23 +48,6 @@ function flickrCtrl($scope, $resource, $q) {
     $scope.size = "Small"; // chosen size to show
     $scope.format = "HTML";
 
-    $scope.person_info_promises = {} // lookup table from userid to promise person info
-
-    $scope.getSize = function(photo) {
-        /* Return the currently selected size for a given photo, as chosen by $scope.Size */
-        var sizes;
-        try {
-            sizes = photo.sizes.sizes.size; // array of sizes, deeply nested in flickr api data
-        } catch(e) {
-            return null;
-        }
-        for(var j = 0; j < sizes.length; j++) {
-            if(sizes[j].label == $scope.size)
-                return sizes[j];
-        }
-        return sizes.length ? sizes[0] : null;
-    }
-
     $scope.run_search = function() {
         searchPhotos.get($scope.search, function(data) {
             $scope.photos = data.photos.photo;
