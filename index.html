@@ -1,16 +1,65 @@
 <!doctype html>
-<html lang="en" ng-app="flickgel">
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>My AngularJS App</title>
-  <link rel="stylesheet" href="css/app.css"/>
+  <title>flickgel - a flickr HTML gallery snippet creator</title>
+  <link rel="stylesheet" href="bootstrap/css/bootstrap.css"/>
+  <link href="bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet" />
 </head>
-<body>
+<body ng-app="flickgel">
 
-  <p ng-controller="flickrCtrl">
-    {{resp}}
-  </p>
-  <div>Angular seed app: v<span app-version></span></div>
+  <div class="container" ng-controller="flickrCtrl">
+
+    <div class="row">
+      <div class="span4"> <!-- controls sidebar -->
+              <label>Flickr username</label>
+              <input name="username" type="text" ng-model="username" />
+
+              <label>Search Tags (separate with commas)</label>
+              <input name="tags" type="text" ng-model="search.tags"/>
+
+              <label>Date Range</label>
+              <input name="daterange" type="text" ng-model="dates" />
+
+              <label>Search Text</label>
+              <input name="text" type="text" ng-model="search.text" />
+
+              <label>Order</label>
+              <label class="radio">
+                <input type="radio" name="sort" value="date-posted-desc" ng-model="search.sort" checked>
+                Newest photos first
+                </input>
+              </label>
+              <label class="radio">
+                <input type="radio" name="sort" id="sort1" value="date-posted-asc" ng-mode="search.sort">
+                Oldest photos first
+                </input>
+              </label>
+
+              <label>Thumbnail Size</label>
+
+
+              <div>
+                <button class="btn" ng-click="run_search()">Find Photos</button>
+              </div>
+      </div>
+
+      <div class="span4"> <!-- plain results -->
+        <div ng-repeat="photo in photos">
+          {{photo.id}}
+          {{ photo.sizes[size] }}
+        </div>
+      </div>
+
+      <div class="span4"> <!-- HTML formatted results -->
+        <p ng-repeat="photo in photos" >
+          <a href="http://www.flickr.com/photos/{{photo.username}}/{{photo.id}}" title="{{photo.title}} by {{photo.username}}, on Flickr">
+            <img src="{{ getSize(photo).source }}" width="{{ getSize(photo).width }}" height="{{ getSize(photo).height }}" alt="{{ photo.title }}"></img>
+          </a>
+        </p>
+      </div>
+
+  </div>
 
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
