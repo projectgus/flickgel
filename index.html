@@ -10,6 +10,18 @@
 
   <div class="container" ng-controller="flickrCtrl">
 
+    <div class="span11 well">
+      <h1>Flickgel</h1>
+      <p>Share HTML or BBCode for multiple flickr images without
+      needing to click 'Share' on each one.</p>
+      <p>Useful for creating blog posts or other pages where you want
+      to share multiple flickr photos without creating a
+      slideshow. Remember to only share photos you have permission to share.</p>
+      <p>To use, enter your search details then click "Find
+      Photos". Choose a thumbnail size, then copy one or more blocks
+      of HTML from the middle column.</p>
+    </div>
+
     <div class="row">
       <div class="span4"> <!-- controls sidebar -->
               <label>Flickr username or user id</label>
@@ -64,22 +76,29 @@
               </label>
       </div>
 
-      <!-- plain results -->
-      <div class="span4" ng-show="photos"><small><pre><div ng-repeat="photo in photos"><span ng-show="format == 'HTML'">&lt;a href="http://www.flickr.com/photos/{{photo.username}}/{{photo.id}}" title="{{photo.title}} by {{photo.username}}, on Flickr"&gt;&lt;img src="{{ photo.sizes[size].source }}" width="{{ photo.sizes[size].width }}" height="{{ photo.sizes[size].height }}" alt="{{ photo.title }}"&gt;&lt;/img&gt;&lt;/a&gt;</span><span ng-show="format == 'BBCode'">[url=http://www.flickr.com/photos/{{photo.username}}/{{photo.id}}/][img]{{photo.sizes[size].source}}[/img][/url][url=http://www.flickr.com/photos/{{photo.username}}/{{photo.id}}/]{{photo.title}}[/url] by [url=http://www.flickr.com/people/{{photo.username}}/]{{photo.username}}[/url], on Flickr</span>
+      <div class="span8" style="vertical-align:middle;">
 
-</div></pre></small>
-      </div>
+        <!-- results -->
+        <div class="row" ng-repeat="photo in photos">
+          <!-- plain results -->
+          <div class="span4" ng-show="format == 'HTML'">
+<pre>&lt;a href="http://www.flickr.com/photos/{{photo.username}}/{{photo.id}}" title="{{photo.title}} by {{photo.username}}, on Flickr"&gt;&lt;img src="{{ photo.sizes[size].source }}" width="{{ photo.sizes[size].width }}" height="{{ photo.sizes[size].height }}" alt="{{ photo.title }}"&gt;&lt;/img&gt;&lt;/a&gt;</pre>
+          </div>
+          <div class="span4" ng-show="format == 'BBCode'" style="overflow-wrap: break-word;">[url=http://www.flickr.com/photos/{{photo.username}}/{{photo.id}}/][img]{{photo.sizes[size].source}}[/img][/url][url=http://www.flickr.com/photos/{{photo.username}}/{{photo.id}}/]{{photo.title}}[/url] by [url=http://www.flickr.com/people/{{photo.username}}/]{{photo.username}}[/url], on Flickr
+          </div>
 
-      <div class="span4"> <!-- HTML formatted results -->
-        <p ng-repeat="photo in photos" >
-          <a href="http://www.flickr.com/photos/{{photo.username}}/{{photo.id}}" title="{{photo.title}} by {{photo.username}}, on Flickr">
-            <img src="{{ photo.sizes[size].source }}" width="{{ photo.sizes[size].width }}" height="{{ photo.sizes[size].height }}" alt="{{ photo.title }}"></img>
-          </a>
-        </p>
+          <!-- preview -->
+          <div class="span4"> <!-- HTML formatted results -->
+            <a href="http://www.flickr.com/photos/{{photo.username}}/{{photo.id}}" title="{{photo.title}} by {{photo.username}}, on Flickr">
+              <img src="{{ photo.sizes[size].source }}" width="{{ photo.sizes[size].width }}" height="{{ photo.sizes[size].height }}" alt="{{ photo.title }}"></img>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
+  </div>
 
-  <!-- In production use:
+ <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
   -->
   <script src="lib/angular/angular.js"></script>

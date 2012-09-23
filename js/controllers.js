@@ -33,14 +33,14 @@ function flickrCtrl($scope, $resource, $q) {
 
     var findByUsername = cachedResource($q, flickr_api_resource({method:"flickr.people.findByUsername"}).get,
                                         "username");
-    var searchPhotos = flickr_api_resource({method:"flickr.photos.search", per_page:10});
+    var searchPhotos = flickr_api_resource({method:"flickr.photos.search", per_page:30});
     var getPersonInfo = cachedResource($q, flickr_api_resource({method:"flickr.people.getInfo"}).get,
                                            "user_id");
 
     var getSizes = cachedResource($q, flickr_api_resource({method:"flickr.photos.getSizes"}).get,
                                       "photo_id");
 
-    $scope.search = { tags:"makehackvoid",  // searchPhotos arguments, bound to form fields in the view
+    $scope.search = { // searchPhotos arguments, bound to form fields in the view
                       sort:"date-posted-desc",
                     };
     $scope.size = "Small"; // chosen size to show
