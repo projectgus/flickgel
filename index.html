@@ -12,8 +12,10 @@
 
     <div class="row">
       <div class="span4"> <!-- controls sidebar -->
-              <label>Flickr username</label>
-              <input name="username" type="text" ng-model="username" />
+              <label>Flickr username or user id</label>
+              <input name="username" type="text" ng-model="username" ng-change="find_user()" />
+              <i class="icon-ok" ng-show="search.user_id"></i>
+              <i class="icon-remove" ng-hide="username.length == 0 || username_loading || search.user_id"></i>
 
               <label>Search Tags (separate with commas)</label>
               <input name="tags" type="text" ng-model="search.tags"/>
@@ -36,6 +38,10 @@
                 </input>
               </label>
 
+              <div class="span2 offset1">
+                <button class="btn" ng-click="run_search()">Find Photos</button>
+              </div>
+
               <label>Thumbnail Size</label>
               <select ng-model="size">
                 <option value="Square">Square 75 (75 x 75)</option>
@@ -56,10 +62,6 @@
               <label class="radio">
                 <input type="radio" name="format" value="BBCode" ng-model="format">BBCode</input>
               </label>
-
-              <div>
-                <button class="btn" ng-click="run_search()">Find Photos</button>
-              </div>
       </div>
 
       <!-- plain results -->

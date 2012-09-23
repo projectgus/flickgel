@@ -31,10 +31,8 @@ function flickrCtrl($scope, $resource, $q) {
                          {get:{method:'JSONP'}});
     }
 
-    /*
-    var res_findByUsername = cachedResource($q, flickr_api_resource.({method:"flickr.people.findByUsername"}).get,
-                                            "username");
-    */
+    var findByUsername = cachedResource($q, flickr_api_resource({method:"flickr.people.findByUsername"}).get,
+                                        "username");
     var searchPhotos = flickr_api_resource({method:"flickr.photos.search", per_page:10});
     var getPersonInfo = cachedResource($q, flickr_api_resource({method:"flickr.people.getInfo"}).get,
                                            "user_id");
@@ -47,9 +45,29 @@ function flickrCtrl($scope, $resource, $q) {
                     };
     $scope.size = "Small"; // chosen size to show
     $scope.format = "HTML";
+    $scope.username = "";
+
+    $scope.find_user = function() {
+        $scope.search.user_id = null;
+        var re_user_id = /^[\d]+@[\dA-Z]+$/;
+        if($scope.username.search(re_user_id) != -1) {
+            console.log("match!");
+            $scope.search.user_id = $scope.username;
+        }
+        else {
+            $scope.username_loading = true;
+            findByUsername({username:$scope.username}).then(function(result) {
+                $scope.username_loading = false;
+                try {
+                    $scope.search.user_id = result.user.id;
+                } catch(e) { }
+            });
+        }
+    }
 
     $scope.run_search = function() {
         searchPhotos.get($scope.search, function(data) {
+            console.log(data);
             $scope.photos = data.photos.photo;
             // attach promises to define photo owner's username & size information
             function bind_username_promise(photo) {
