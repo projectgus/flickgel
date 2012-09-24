@@ -32,8 +32,8 @@
               <label>Search Tags (separate with commas)</label>
               <input name="tags" type="text" ng-model="search.tags"/>
 
-              <label>Date Range</label>
-              <input name="daterange" type="text" ng-model="dates" />
+              <label>Date Uploaded</label>
+              <input name="daterange" type="text" ng-model="dates" ng-daterangepicker="datechanged" />
 
               <label>Search Text</label>
               <input name="text" type="text" ng-model="search.text" />
@@ -109,5 +109,8 @@
   <script src="js/filters.js"></script>
   <script src="js/directives.js"></script>
   <script src="js/apikey.js"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+  <script src="bootstrap-daterangepicker/date.js"></script>
+  <script src="bootstrap-daterangepicker/daterangepicker.js"></script>
 </body>
 </html>

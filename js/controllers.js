@@ -47,6 +47,11 @@ function flickrCtrl($scope, $resource, $q) {
     $scope.format = "HTML";
     $scope.username = "";
 
+    $scope.datechanged = function(start, end) {
+        $scope.search.min_upload_date = Math.floor(start.getTime()/1000);
+        $scope.search.max_upload_date = Math.floor(end.getTime()/1000);
+    };
+
     $scope.find_user = function() {
         $scope.search.user_id = null;
         var re_user_id = /^[\d]+@[\dA-Z]+$/;
