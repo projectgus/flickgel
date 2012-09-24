@@ -1,6 +1,9 @@
 'use strict';
 
-/* Directives */
+/* Directives
+
+Copyright (c) 2012 Angus Gratton. Licensed under the New BSD License.
+*/
 
 angular.module('flickgel.directives', []).
 /*
