@@ -89,15 +89,15 @@
         <div class="row" ng-repeat="photo in photos">
           <!-- plain results -->
           <div class="span4" ng-show="format == 'HTML' && !message && !error">
-<pre>&lt;a href="http://www.flickr.com/photos/{{photo.ownername}}/{{photo.id}}" title="{{photo.title}} by {{photo.owner_name}}, on Flickr"&gt;&lt;img src="{{ get_size(photo).url }}" width="{{ get_size(photo).width }}" height="{{ get_size(photo).height }}" alt="{{ photo.title }}"&gt;&lt;/img&gt;&lt;/a&gt;</pre>
+<pre>&lt;a href="http://www.flickr.com/photos/{{photo.url_owner}}/{{photo.id}}" title="{{photo.title}} by {{photo.ownername}}, on Flickr"&gt;&lt;img src="{{ get_size(photo).url }}" width="{{ get_size(photo).width }}" height="{{ get_size(photo).height }}" alt="{{ photo.title }}"&gt;&lt;/img&gt;&lt;/a&gt;</pre>
           </div>
           <div class="span4" ng-show="format == 'BBCode' && !message && !error" style="overflow-wrap: break-word;">
-<pre>[url=http://www.flickr.com/photos/{{photo.username}}/{{photo.id}}/][img]{{get_size(photo).url}}[/img][/url][url=http://www.flickr.com/photos/{{photo.ownername}}/{{photo.id}}/]{{photo.title}}[/url] by [url=http://www.flickr.com/people/{{photo.username}}/]{{photo.username}}[/url], on Flickr</pre>
+<pre>[url=http://www.flickr.com/photos/{{photo.url_owner}}/{{photo.id}}/][img]{{get_size(photo).url}}[/img][/url][url=http://www.flickr.com/photos/{{photo.url_owner}}/{{photo.id}}/]{{photo.title}}[/url] by [url=http://www.flickr.com/people/{{photo.url_owner}}/]{{photo.ownername}}[/url], on Flickr</pre>
           </div>
 
           <!-- preview -->
           <div class="span4" ng-hide="message || error"> <!-- HTML formatted results -->
-            <a href="http://www.flickr.com/photos/{{photo.ownername}}/{{photo.id}}" title="{{photo.title}} by {{photo.username}}, on Flickr">
+            <a href="http://www.flickr.com/photos/{{photo.url_owner}}/{{photo.id}}" title="{{photo.title}} by {{photo.ownername}}, on Flickr">
               <img src="{{ get_size(photo).url }}" width="{{ get_size(photo).width }}" height="{{ get_size(photo).height }}" alt="{{ photo.title }}"></img>
             </a>
           </div>

@@ -36,7 +36,6 @@ function flickrCtrl($scope, $resource, $q) {
         $scope.search.user_id = null;
         var re_user_id = /^[\d]+@[\dA-Z]+$/;
         if($scope.username.search(re_user_id) != -1) {
-            console.log("match!");
             $scope.search.user_id = $scope.username;
         }
         else {
@@ -61,6 +60,12 @@ function flickrCtrl($scope, $resource, $q) {
                 $scope.photos = data.photos.photo;
                 if($scope.photos.length == 0) {
                     $scope.message = "No publicly accessible photos were found :(";
+                }
+                for(var i=0; i<$scope.photos.length;i++) {
+                    if($scope.photos[i].ownername.search(" ") > -1) // replace any photos w/ invalid ownernames
+                        $scope.photos[i].url_owner = $scope.photos[i].owner;
+                    else
+                        $scope.photos[i].url_owner = $scope.photos[i].ownername;
                 }
             }
         });
