@@ -26,9 +26,10 @@
     <div class="row">
       <div class="span4"> <!-- controls sidebar -->
               <label>Flickr username or <abbr title="flickr user ids look like this: 12345678@N32">user id</abbr></label>
-              <input name="username" type="text" ng-model="username" ng-change="find_user()" />
-              <i class="icon-ok" ng-show="search.user_id"></i>
+              <input name="username" type="text" ng-model="username" ng-change="trigger_find_user()" />
+              <i class="icon-ok" ng-show="search.user_id && !username_loading"></i>
               <i class="icon-remove" ng-hide="username.length == 0 || username_loading || search.user_id"></i>
+              <i class="icon-question-sign" ng-show="username_loading"></i>
 
               <label>Search Tags (separate with commas)</label>
               <input name="tags" type="text" ng-model="search.tags"/>

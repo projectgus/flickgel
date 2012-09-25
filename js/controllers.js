@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-function flickrCtrl($scope, $resource, $q) {
+function flickrCtrl($scope, $resource, $q, $timeout) {
 
     function flickr_api_resource(args) {
         args.api_key = API_KEY;
@@ -48,6 +48,16 @@ function flickrCtrl($scope, $resource, $q) {
             });
         }
     }
+
+    // Trigger find_user after 700ms if no further change event
+    var last_trigger_find;
+    $scope.trigger_find_user = function() {
+        $scope.username_loading = true;
+        $timeout.cancel(last_trigger_find);
+        $timeout($scope.find_user, 700);
+    }
+
+
 
     $scope.run_search = function() {
         $scope.message = "Searching...";
