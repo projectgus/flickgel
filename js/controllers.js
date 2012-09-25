@@ -14,14 +14,15 @@ function flickrCtrl($scope, $resource, $q) {
     }
 
     var findByUsername = flickr_api_resource({method:"flickr.people.findByUsername"}, {});
-    var searchPhotos = flickr_api_resource({method:"flickr.photos.search", per_page:30}, {});
-    var getPersonInfo = flickr_api_resource({method:"flickr.people.getInfo"}, {} ,true);
-    var getSizes = flickr_api_resource({method:"flickr.photos.getSizes"}, {});
+    var searchPhotos = flickr_api_resource({method:"flickr.photos.search",
+                                            per_page:50,
+                                            extras:"url_sq,url_t,url_s,url_q,url_m,url_n,url_z,url_c,url_l,url_o,owner_name",
+                                           }, {});
 
     $scope.search = { // searchPhotos arguments, bound to form fields in the view
                       sort:"date-posted-desc",
                     };
-    $scope.size = "Small"; // chosen size to show
+    $scope.size = "s"; // default to size Small
     $scope.format = "HTML";
     $scope.username = "";
 
@@ -52,26 +53,14 @@ function flickrCtrl($scope, $resource, $q) {
         searchPhotos.get($scope.search, function(data) {
             console.log(data);
             $scope.photos = data.photos.photo;
-            // attach promises to define photo owner's username & size information
-            function bind_username_promise(photo) {
-                getPersonInfo.get({user_id:photo.owner}, function(result) {
-                    photo.username = result.person.username._content;
-                });
-            }
-            function bind_size_promise(photo) {
-                getSizes.get({photo_id:photo.id}, function(result) {
-                    var src = result.sizes.size; // api has an array nested in it
-                    photo.sizes = {}; // make into an associative array
-                    for(var j = 0; j < src.length; j++) {
-                        photo.sizes[src[j].label] = src[j];
-                    }
-                });
-            }
-            for(var i=0; i<$scope.photos.length; i++) {
-                var photo = $scope.photos[i];
-                bind_username_promise(photo);
-                bind_size_promise(photo);
-            }
         });
+    }
+
+    $scope.get_size = function(photo) {
+        return {
+            url: photo["url_"+$scope.size],
+            height: photo["height_"+$scope.size],
+            width: photo["width_"+$scope.size],
+        };
     }
 }
