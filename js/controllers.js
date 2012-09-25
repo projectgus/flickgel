@@ -59,6 +59,9 @@ function flickrCtrl($scope, $resource, $q) {
                 $scope.error = "Error: " + data.message;
             } else {
                 $scope.photos = data.photos.photo;
+                if($scope.photos.length == 0) {
+                    $scope.message = "No publicly accessible photos were found :(";
+                }
             }
         });
     }
