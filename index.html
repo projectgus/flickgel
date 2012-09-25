@@ -78,18 +78,25 @@
       </div>
 
       <div class="span8" style="vertical-align:middle;">
+        <!-- status messages (instead of results) -->
+        <div class="row">
+          <div class="span8" ng-show="message || error">
+            <p class="text-info" ng-show="message && !error">{{message}}</p>
+            <p class="text-error" ng-show="error">{{error}}</p>
+          </div>
+        </div>
 
-        <!-- results -->
         <div class="row" ng-repeat="photo in photos">
           <!-- plain results -->
-          <div class="span4" ng-show="format == 'HTML'">
+          <div class="span4" ng-show="format == 'HTML' && !message && !error">
 <pre>&lt;a href="http://www.flickr.com/photos/{{photo.ownername}}/{{photo.id}}" title="{{photo.title}} by {{photo.owner_name}}, on Flickr"&gt;&lt;img src="{{ get_size(photo).url }}" width="{{ get_size(photo).width }}" height="{{ get_size(photo).height }}" alt="{{ photo.title }}"&gt;&lt;/img&gt;&lt;/a&gt;</pre>
           </div>
-          <div class="span4" ng-show="format == 'BBCode'" style="overflow-wrap: break-word;">[url=http://www.flickr.com/photos/{{photo.username}}/{{photo.id}}/][img]{{get_size(photo).url}}[/img][/url][url=http://www.flickr.com/photos/{{photo.ownername}}/{{photo.id}}/]{{photo.title}}[/url] by [url=http://www.flickr.com/people/{{photo.username}}/]{{photo.username}}[/url], on Flickr
+          <div class="span4" ng-show="format == 'BBCode' && !message && !error" style="overflow-wrap: break-word;">
+<pre>[url=http://www.flickr.com/photos/{{photo.username}}/{{photo.id}}/][img]{{get_size(photo).url}}[/img][/url][url=http://www.flickr.com/photos/{{photo.ownername}}/{{photo.id}}/]{{photo.title}}[/url] by [url=http://www.flickr.com/people/{{photo.username}}/]{{photo.username}}[/url], on Flickr</pre>
           </div>
 
           <!-- preview -->
-          <div class="span4"> <!-- HTML formatted results -->
+          <div class="span4" ng-hide="message || error"> <!-- HTML formatted results -->
             <a href="http://www.flickr.com/photos/{{photo.ownername}}/{{photo.id}}" title="{{photo.title}} by {{photo.username}}, on Flickr">
               <img src="{{ get_size(photo).url }}" width="{{ get_size(photo).width }}" height="{{ get_size(photo).height }}" alt="{{ photo.title }}"></img>
             </a>

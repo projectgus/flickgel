@@ -25,6 +25,7 @@ function flickrCtrl($scope, $resource, $q) {
     $scope.size = "s"; // default to size Small
     $scope.format = "HTML";
     $scope.username = "";
+    $scope.message = null;
 
     $scope.datechanged = function(start, end) {
         $scope.search.min_upload_date = Math.floor(start.getTime()/1000);
@@ -50,9 +51,15 @@ function flickrCtrl($scope, $resource, $q) {
     }
 
     $scope.run_search = function() {
+        $scope.message = "Searching...";
+        $scope.error = null;
         searchPhotos.get($scope.search, function(data) {
-            console.log(data);
-            $scope.photos = data.photos.photo;
+            $scope.message = null;
+            if(!data.photos || data.stat == "fail") {
+                $scope.error = "Error: " + data.message;
+            } else {
+                $scope.photos = data.photos.photo;
+            }
         });
     }
 
