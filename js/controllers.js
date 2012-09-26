@@ -20,8 +20,8 @@ function flickrCtrl($scope, $resource, $q, $timeout) {
                                            }, {});
 
     $scope.search = { // searchPhotos arguments, bound to form fields in the view
-                      sort:"date-posted-desc",
-                    };
+        sort:"date-posted-desc"
+    };
     $scope.size = "s"; // default to size Small
     $scope.format = "HTML";
     $scope.username = "";
@@ -57,10 +57,18 @@ function flickrCtrl($scope, $resource, $q, $timeout) {
         $timeout($scope.find_user, 700);
     }
 
-
+    function fixup_photos(photos) {
+        for(var i=0; i<photos.length;i++) {
+            if(photos[i].ownername.search(" ") > -1) // replace any photos w/ invalid ownernames
+                photos[i].url_owner = photos[i].owner;
+            else
+                photos[i].url_owner = photos[i].ownername;
+        }
+    }
 
     $scope.run_search = function() {
         $scope.message = "Searching...";
+        $scope.search.page = 1;
         $scope.error = null;
         searchPhotos.get($scope.search, function(data) {
             $scope.message = null;
@@ -71,15 +79,35 @@ function flickrCtrl($scope, $resource, $q, $timeout) {
                 if($scope.photos.length == 0) {
                     $scope.message = "No publicly accessible photos were found :(";
                 }
-                for(var i=0; i<$scope.photos.length;i++) {
-                    if($scope.photos[i].ownername.search(" ") > -1) // replace any photos w/ invalid ownernames
-                        $scope.photos[i].url_owner = $scope.photos[i].owner;
-                    else
-                        $scope.photos[i].url_owner = $scope.photos[i].ownername;
-                }
+                fixup_photos(data.photos.photo);
             }
         });
     }
+
+    // Infinite scrolling
+    $scope.scrolling = false;
+    $scope.next_page = function() {
+        if($scope.scrolling || !$scope.photos || $scope.photos.length == 0)
+            return;
+        $scope.scrolling = true;
+        $scope.search.page += 1;
+        searchPhotos.get($scope.search, function(data) {
+            if(data.photos) {
+                $scope.photos = $scope.photos.concat(data.photos.photo);
+                fixup_photos(data.photos.photo);
+                $scope.scrolling = false;
+            }
+        });
+    }
+
+    // bind page scroll event directly. not as elegant as using a directive, but this is a small app!
+    $(document).scroll(function() {
+        if($(document).scrollTop() > $(document).height() - $(window).height()*2) {
+            $scope.$apply(function() {
+                $scope.next_page();
+            });
+        }
+    });
 
     $scope.get_size = function(photo) {
         return {
