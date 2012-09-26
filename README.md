@@ -24,10 +24,6 @@ Runs entirely in the browser so easy to host yourself. Just put a file 'apikey.j
 
 # Known Issues
 
-* Inline placeholder elements briefly appear when the page is first loading.
-
-* Has no error handling if API requests fail!
-
 * Has no tests.
 
 * My first angular.js project and one of the first things I've done with

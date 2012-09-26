@@ -5,6 +5,11 @@
   <title>flickgel - a flickr HTML gallery snippet creator</title>
   <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.css"/>
   <link href="lib/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet" />
+  <style type="text/css">
+    [ng\:cloak], [ng-cloak], .ng-cloak {
+      display: none;
+    }
+  </style>
 </head>
 <body ng-app="flickgel">
 
@@ -23,7 +28,7 @@
       <p>Open source, <a href="https://github.com/projectgus/flickgel">code on github</a>. Created as a learning project, this tool uses the <a href="http://www.flickr.com/services/developer/api/">Flickr API</a> but is not created or endorsed by <a href="http://www.flickr.com/">Flickr</a>.</p>
     </div>
 
-    <div class="row">
+    <div class="row" ng-cloak>
       <div class="span4"> <!-- controls sidebar -->
               <label>Flickr username or <abbr title="flickr user ids look like this: 12345678@N32">user id</abbr></label>
               <input name="username" type="text" ng-model="username" ng-change="trigger_find_user()" />
@@ -110,7 +115,7 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row" ng-cloak>
       <div class="span6 offset3"><small>Flickgel Copyright 2012 Angus Gratton. Licensed under New BSD License.</small></div>
     </div>
 
