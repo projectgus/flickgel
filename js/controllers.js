@@ -37,6 +37,7 @@ function flickrCtrl($scope, $resource, $q, $timeout) {
         var re_user_id = /^[\d]+@[\dA-Z]+$/;
         if($scope.username.search(re_user_id) != -1) {
             $scope.search.user_id = $scope.username;
+            $scope.username_loading = false;
         }
         else {
             $scope.username_loading = true;
