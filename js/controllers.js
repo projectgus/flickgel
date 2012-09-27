@@ -109,6 +109,13 @@ function flickrCtrl($scope, $resource, $q, $timeout) {
         }
     });
 
+    // bind enter key to run_search
+    $(document).keypress(function(event) {
+        if(event.keyCode == 13) {
+            $scope.$apply($scope.run_search);
+        }
+    });
+
     $scope.get_size = function(photo) {
         return {
             url: photo["url_"+$scope.size],
